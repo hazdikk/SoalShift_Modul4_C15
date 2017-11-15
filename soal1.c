@@ -70,6 +70,12 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 	else sprintf(fpath, "%s%s",dirpath,path);
 	int res = 0;
   int fd = 0 ;
+    //printf("%s", fpath);
+    if(strstr(fpath, ".pdf")!=NULL || strstr(fpath, ".doc")!=NULL || strstr(fpath, ".txt")!=NULL)
+    {
+    system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"ERROR!\"");
+    ]
+
 
 	(void) fi;
 	fd = open(fpath, O_RDONLY);
