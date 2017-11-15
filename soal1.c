@@ -79,11 +79,11 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
             sprintf(newname, "%s.ditandai", fpath);
             rename(fpath, newname);
             char perm[100];
-            sprintf(perm, "chmod 000 %s.ditandai",fpath);
-            sprintf(perm);
+            sprintf(perm, "chmod 000 %s",newname);
+            system(perm);
         }
         system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"ERROR!\"");
-    ]
+    }
 
 
 	(void) fi;
