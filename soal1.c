@@ -73,7 +73,16 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
     //printf("%s", fpath);
     if(strstr(fpath, ".pdf")!=NULL || strstr(fpath, ".doc")!=NULL || strstr(fpath, ".txt")!=NULL)
     {
-    system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"ERROR!\"");
+        if(strstr(fpath, ".ditandai")==NULL)
+            {
+            char newname[100];
+            sprintf(newname, "%s.ditandai", fpath);
+            rename(fpath, newname);
+            char perm[100];
+            sprintf(perm, "chmod 000 %s.ditandai",path2);
+            sprintf(perm);
+            }
+        system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"ERROR!\"");
     ]
 
 
