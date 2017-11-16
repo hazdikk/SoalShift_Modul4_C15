@@ -2,13 +2,14 @@
 #include <fuse.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
 #include <errno.h>
 #include <sys/time.h>
 
-static const char *dirpath = "/home/administrator/Documents";
+static const char *dirpath = "/home/hazdik/Documents";
 
 static int xmp_getattr(const char *path, struct stat *stbuf)
 {
@@ -70,6 +71,21 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 	else sprintf(fpath, "%s%s",dirpath,path);
 	int res = 0;
   int fd = 0 ;
+    //printf("%s", fpath);
+    if(strstr(fpath, ".pdf")!=NULL || strstr(fpath, ".doc")!=NULL || strstr(fpath, ".txt")!=NULL)
+    {
+        if(strstr(fpath, ".ditandai")==NULL)
+        {
+            char newname[100];
+            sprintf(newname, "%s.ditandai", fpath);
+            rename(fpath, newname);
+            char perm[100];
+            sprintf(perm, "chmod 000 %s",newname);
+            system(perm);
+        }
+        system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"ERROR!\"");
+    }
+
 
 	(void) fi;
 	fd = open(fpath, O_RDONLY);
