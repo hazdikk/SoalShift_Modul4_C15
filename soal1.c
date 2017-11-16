@@ -74,9 +74,9 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
     //printf("%s", fpath);
     if(strstr(fpath, ".pdf")!=NULL || strstr(fpath, ".doc")!=NULL || strstr(fpath, ".txt")!=NULL)
     {
+        char newname[100];
         if(strstr(fpath, ".ditandai")==NULL)
         {
-            char newname[100];
             sprintf(newname, "%s.ditandai", fpath);
             rename(fpath, newname);
             char perm[100];
@@ -84,20 +84,20 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
             system(perm);
         }
         system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"ERROR!\"");
+        return -errno;
+    }else{
+    	(void) fi;
+    	fd = open(fpath, O_RDONLY);
+    	if (fd == -1)
+    		return -errno;
+
+    	res = pread(fd, buf, size, offset);
+    	if (res == -1)
+    		res = -errno;
+
+	    close(fd);
+	    return res;
     }
-
-
-	(void) fi;
-	fd = open(fpath, O_RDONLY);
-	if (fd == -1)
-		return -errno;
-
-	res = pread(fd, buf, size, offset);
-	if (res == -1)
-		res = -errno;
-
-	close(fd);
-	return res;
 }
 
 static struct fuse_operations xmp_oper = {
