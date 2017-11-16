@@ -8,8 +8,12 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 static const char *dirpath = "/home/hazdik/Documents";
+
+struct stat st = {0};
 
 static int xmp_getattr(const char *path, struct stat *stbuf)
 {
@@ -74,9 +78,9 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
     //printf("%s", fpath);
     if(strstr(fpath, ".pdf")!=NULL || strstr(fpath, ".doc")!=NULL || strstr(fpath, ".txt")!=NULL)
     {
+        char newname[100];
         if(strstr(fpath, ".ditandai")==NULL)
         {
-            char newname[100];
             sprintf(newname, "%s.ditandai", fpath);
             rename(fpath, newname);
             char perm[100];
@@ -84,8 +88,13 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
             system(perm);
         }
         system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"ERROR!\"");
+        if (stat("/home/hazdik/rahasia", &st) == -1) {
+        mkdir("/home/hazdik/rahasia", 0777);
+        }
+        char move[50];
+        sprintf(move, "mv %s /home/hazdik/rahasia", newname);
+        system(move);
     }
-
 
 	(void) fi;
 	fd = open(fpath, O_RDONLY);
